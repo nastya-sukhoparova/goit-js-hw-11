@@ -1,60 +1,48 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
-
-let lightbox;
+const gallery = document.querySelector('.gallery');
 
 export function renderGallery(images) {
-  const galleryEl = document.querySelector('.gallery');
   const markup = images.map(image => `
-    <a class="gallery-item" href="${image.largeImageURL}">
-      <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
+    <li class="gallery-item">
+      <a href="${image.largeImageURL}" class="gallery-link">
+        <img src="${image.webformatURL}" alt="${image.tags}" class="gallery-image" />
+      </a>
       <div class="info">
-        <p><b>Likes:</b> ${image.likes}</p>
-        <p><b>Views:</b> ${image.views}</p>
-        <p><b>Comments:</b> ${image.comments}</p>
-        <p><b>Downloads:</b> ${image.downloads}</p>
+        <p class="info-item"><b>Likes:</b> ${image.likes}</p>
+        <p class="info-item"><b>Views:</b> ${image.views}</p>
+        <p class="info-item"><b>Comments:</b> ${image.comments}</p>
+        <p class="info-item"><b>Downloads:</b> ${image.downloads}</p>
       </div>
-    </a>
+    </li>
   `).join('');
 
-  galleryEl.innerHTML = markup;
-
-  if (!lightbox) {
-    lightbox = new SimpleLightbox('.gallery a');
-  } else {
-    lightbox.refresh();
-  }
+  gallery.insertAdjacentHTML('beforeend', markup); 
 }
 
 export function clearGallery() {
-  document.querySelector('.gallery').innerHTML = '';
+  gallery.innerHTML = ''; 
 }
 
 export function showError(message) {
   iziToast.error({
     title: 'Error',
-    message,
+    message: message,
   });
 }
 
 export function showSuccess(message) {
   iziToast.success({
     title: 'Success',
-    message,
+    message: message,
   });
 }
 
 export function showLoading() {
-  iziToast.info({
-    title: 'Loading',
-    message: 'Searching for images...',
-    timeout: false,
-    progressBar: true,
-  });
+  const loader = document.querySelector('.loader'); 
+  loader.style.display = 'block'; 
 }
 
 export function hideLoading() {
-  iziToast.hide({}, document.querySelector('.iziToast-info'));
+  const loader = document.querySelector('.loader');
+  loader.style.display = 'none'; 
 }
+
