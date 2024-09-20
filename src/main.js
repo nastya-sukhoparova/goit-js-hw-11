@@ -1,10 +1,13 @@
 import { fetchImages } from './js/pixabay-api';
 import { renderGallery, clearGallery, showError, showLoading, hideLoading, showSuccess } from './js/render-functions';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const form = document.querySelector('#search-form');
 const input = form.querySelector('input[name="searchQuery"]');
 const gallery = document.querySelector('.gallery');
 let page = 1;
+let lightbox;
 
 form.addEventListener('submit', onSearch);
 
@@ -31,6 +34,14 @@ function fetchAndRenderImages(query) {
         return;
       }
       renderGallery(data.hits);
+
+      
+      if (!lightbox) {
+        lightbox = new SimpleLightbox('.gallery a');
+      } else {
+        lightbox.refresh();
+      }
+
       showSuccess(`Found ${data.totalHits} images`);
     })
     .catch(error => {
